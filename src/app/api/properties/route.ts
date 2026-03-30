@@ -1,41 +1,21 @@
-import { NextRequest, NextResponse } from "next/server"
-import prisma from "@/lib/prisma"
+import { NextResponse } from 'next/server'
+import { getProperties, createProperty } from '@/lib/data/properties'
 
 export async function GET() {
   try {
-    const properties = await prisma.property.findMany({
-      orderBy: { createdAt: "desc" },
-    })
+    const properties = await getProperties()
     return NextResponse.json(properties)
-  } catch (error) {
-    return NextResponse.json({ error: "Failed to fetch properties" }, { status: 500 })
+  } catch {
+    return NextResponse.json({ error: 'Failed to fetch properties' }, { status: 500 })
   }
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(req: Request) {
   try {
-    const body = await request.json()
-    const property = await prisma.property.create({
-      data: {
-        title: body.title,
-        address: body.address,
-        city: body.city,
-        postcode: body.postcode,
-        bedrooms: parseInt(body.bedrooms),
-        bathrooms: parseInt(body.bathrooms),
-        maxGuests: parseInt(body.maxGuests),
-        type: body.type,
-        status: body.status || "active",
-        amenities: Array.isArray(body.amenities)
-          ? JSON.stringify(body.amenities)
-          : body.amenities,
-        description: body.description,
-        pricePerNight: body.pricePerNight ? parseFloat(body.pricePerNight) : null,
-        available: body.available !== undefined ? body.available : true,
-      },
-    })
+    const body = await req.json()
+    const property = await createProperty(body)
     return NextResponse.json(property, { status: 201 })
-  } catch (error) {
-    return NextResponse.json({ error: "Failed to create property" }, { status: 500 })
+  } catch {
+    return NextResponse.json({ error: 'Failed to create property' }, { status: 500 })
   }
 }

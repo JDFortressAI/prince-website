@@ -24,6 +24,11 @@ export default function Navbar() {
             <span className="text-[#F59E0B] text-2xl leading-none">.</span>
           </Link>
 
+          {/* Phone — always visible */}
+          <a href="tel:+442034882119" className="hidden sm:flex items-center gap-1 text-xs text-slate-500 hover:text-[#F59E0B] transition-colors">
+            <span>+44 203 488 2119</span>
+          </a>
+
           {/* Desktop nav */}
           <div className="hidden md:flex items-center gap-6">
             <Link href="/" className="text-sm font-medium text-slate-600 hover:text-[#0F172A] transition-colors">

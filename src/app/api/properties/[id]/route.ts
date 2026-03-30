@@ -1,40 +1,39 @@
-import { NextRequest, NextResponse } from "next/server"
-import prisma from "@/lib/prisma"
+import { NextResponse } from 'next/server'
+import { getPropertyById, updateProperty, toggleAvailability } from '@/lib/data/properties'
 
 export async function GET(
-  _request: NextRequest,
+  _req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params
-    const property = await prisma.property.findUnique({ where: { id } })
-    if (!property) {
-      return NextResponse.json({ error: "Property not found" }, { status: 404 })
-    }
+    const property = await getPropertyById(id)
+    if (!property) return NextResponse.json({ error: 'Not found' }, { status: 404 })
     return NextResponse.json(property)
   } catch {
-    return NextResponse.json({ error: "Failed to fetch property" }, { status: 500 })
+    return NextResponse.json({ error: 'Failed to fetch property' }, { status: 500 })
   }
 }
 
 export async function PATCH(
-  request: NextRequest,
+  req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params
-    const body = await request.json()
-    const data: Record<string, any> = {}
+    const body = await req.json()
 
-    if (body.title !== undefined) data.title = body.title
-    if (body.status !== undefined) data.status = body.status
-    if (body.available !== undefined) data.available = body.available
-    if (body.pricePerNight !== undefined) data.pricePerNight = body.pricePerNight
-    if (body.description !== undefined) data.description = body.description
+    // Special action: toggle availability
+    if (body.action === 'toggle-availability') {
+      const updated = await toggleAvailability(id)
+      if (!updated) return NextResponse.json({ error: 'Not found' }, { status: 404 })
+      return NextResponse.json(updated)
+    }
 
-    const property = await prisma.property.update({ where: { id }, data })
-    return NextResponse.json(property)
+    const updated = await updateProperty(id, body)
+    if (!updated) return NextResponse.json({ error: 'Not found' }, { status: 404 })
+    return NextResponse.json(updated)
   } catch {
-    return NextResponse.json({ error: "Failed to update property" }, { status: 500 })
+    return NextResponse.json({ error: 'Failed to update property' }, { status: 500 })
   }
 }

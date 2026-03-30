@@ -1,17 +1,3 @@
-import { PrismaClient } from "@prisma/client"
-import { PrismaLibSql } from "@prisma/adapter-libsql"
-
-declare global {
-  var prisma: PrismaClient | undefined
-}
-
-function createPrisma() {
-  const factory = new PrismaLibSql({ url: "file:./prisma/dev.db" })
-  return new PrismaClient({ adapter: factory } as any)
-}
-
-const prisma = global.prisma ?? createPrisma()
-
-if (process.env.NODE_ENV !== "production") global.prisma = prisma
-
-export default prisma
+// This file is kept for legacy compatibility but is no longer used.
+// All data access now goes through src/lib/data/ (serverless-compatible in-memory store).
+export default null
