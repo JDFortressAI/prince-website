@@ -20,6 +20,12 @@ import {
   Wrench,
   Truck,
   Factory,
+  Bot,
+  Search,
+  MessageSquare,
+  RefreshCw,
+  Headphones,
+  TrendingUp,
 } from "lucide-react"
 
 const services = [
@@ -96,6 +102,48 @@ const stats = [
   { value: "50+", label: "UK Locations" },
   { value: "24h", label: "Sourcing Time" },
   { value: "100%", label: "Dedicated Support" },
+]
+
+const aiPriority = [
+  {
+    icon: Search,
+    label: "Supply Acquisition",
+    title: "A Growing Property Network — Without the Legwork",
+    desc: "Our AI agent finds and qualifies new serviced accommodation providers every day. New properties are identified, vetted, and added to our network automatically — so your team always has options close to the job site.",
+    cta: "List Your Property",
+    href: "/for-hosts",
+  },
+  {
+    icon: TrendingUp,
+    label: "Demand Generation",
+    title: "Companies That Need You, Found Automatically",
+    desc: "Our demand agent identifies businesses deploying teams across the UK and reaches out on your behalf. A consistent pipeline of qualified accommodation enquiries — without a sales team chasing cold lists.",
+    cta: "Get a Quote",
+    href: "/#quote",
+  },
+]
+
+const aiSupporting = [
+  {
+    icon: Bot,
+    title: "Instant Matching",
+    desc: "Every enquiry is matched to the best available property in seconds.",
+  },
+  {
+    icon: MessageSquare,
+    title: "24/7 Enquiry Handling",
+    desc: "Every inbound request answered immediately — no lead ever waits.",
+  },
+  {
+    icon: Headphones,
+    title: "Round-the-Clock Support",
+    desc: "Guests and hosts supported from check-in to checkout, automatically.",
+  },
+  {
+    icon: RefreshCw,
+    title: "Automatic Re-engagement",
+    desc: "Past clients re-contacted at exactly the right moment — no manual chasing.",
+  },
 ]
 
 const industries = [
@@ -330,8 +378,74 @@ export default function HomePage() {
           </div>
         </section>
 
+        {/* ── AI-Powered Platform ── */}
+        <section className="py-20 bg-[#0F172A]">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            {/* Header */}
+            <div className="text-center mb-12">
+              <div className="inline-flex items-center gap-2 bg-[#F59E0B]/20 text-[#F59E0B] text-xs font-semibold px-3 py-1.5 rounded-full border border-[#F59E0B]/30 mb-5">
+                <Bot size={13} />
+                AI-Powered Platform
+              </div>
+              <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+                Built to Scale Without the Overhead
+              </h2>
+              <p className="text-slate-400 max-w-2xl mx-auto">
+                Homes For Workers is becoming an AI-first platform — automating the two hardest parts of the business: finding great properties and finding the companies that need them.
+              </p>
+            </div>
+
+            {/* Priority agents — two large feature cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              {aiPriority.map((agent) => (
+                <div
+                  key={agent.title}
+                  className="bg-white/5 border border-[#F59E0B]/30 rounded-2xl p-8 flex flex-col gap-5 hover:border-[#F59E0B]/60 transition-all group"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-11 h-11 bg-[#F59E0B]/20 group-hover:bg-[#F59E0B]/30 rounded-xl flex items-center justify-center transition-colors shrink-0">
+                      <agent.icon size={22} className="text-[#F59E0B]" />
+                    </div>
+                    <span className="text-xs font-semibold text-[#F59E0B] uppercase tracking-widest">{agent.label}</span>
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-white mb-2">{agent.title}</h3>
+                    <p className="text-sm text-slate-400 leading-relaxed">{agent.desc}</p>
+                  </div>
+                  <Link
+                    href={agent.href}
+                    className="mt-auto inline-flex items-center gap-2 text-sm font-semibold text-[#F59E0B] hover:text-amber-300 transition-colors"
+                  >
+                    {agent.cta} <ArrowRight size={14} />
+                  </Link>
+                </div>
+              ))}
+            </div>
+
+            {/* Supporting agents — four compact cards */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+              {aiSupporting.map((agent) => (
+                <div
+                  key={agent.title}
+                  className="bg-white/5 border border-white/8 rounded-2xl p-5 hover:border-white/20 transition-all"
+                >
+                  <div className="w-9 h-9 bg-white/8 rounded-xl flex items-center justify-center mb-3">
+                    <agent.icon size={18} className="text-slate-400" />
+                  </div>
+                  <h3 className="text-sm font-bold text-white mb-1">{agent.title}</h3>
+                  <p className="text-xs text-slate-500 leading-relaxed">{agent.desc}</p>
+                </div>
+              ))}
+            </div>
+
+            <p className="text-center text-xs text-slate-600 mt-10">
+              Powered by JD Fortress AI — bespoke AI automation built for Homes For Workers
+            </p>
+          </div>
+        </section>
+
         {/* ── CTA Banner ── */}
-        <section className="py-16 bg-[#0F172A]">
+        <section className="py-16 bg-[#0F172A] border-t border-white/5">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">
               Ready to sort accommodation for your team?

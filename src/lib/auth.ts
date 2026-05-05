@@ -21,11 +21,19 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   ],
   callbacks: {
     jwt({ token, user }) {
-      if (user) token.role = (user as { role?: string }).role
+      if (user) {
+        const u = user as Record<string, unknown>
+        token.role = u.role
+        token.id = u.id
+      }
       return token
     },
     session({ session, token }) {
-      if (session.user) (session.user as { role?: unknown }).role = token.role
+      if (session.user) {
+        const user = session.user as unknown as Record<string, unknown>
+        user.role = token.role
+        user.id = token.id
+      }
       return session
     },
   },

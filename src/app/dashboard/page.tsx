@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import dynamic from "next/dynamic"
-import { Users, Building2, CalendarCheck, TrendingUp, Plus, ArrowRight } from "lucide-react"
+import { Users, Building2, CalendarCheck, TrendingUp, Plus, ArrowRight, UserCircle, Settings } from "lucide-react"
 
 const BarChart = dynamic(
   () => import("recharts").then((m) => {
@@ -219,6 +219,20 @@ export default function DashboardPage() {
           >
             <Users size={16} />
             Manage Leads
+          </Link>
+          <Link
+            href="/dashboard/users"
+            className="flex items-center gap-2 px-5 py-2.5 bg-white border border-slate-200 text-[#0F172A] text-sm font-medium rounded-xl hover:border-[#F59E0B] transition-colors"
+          >
+            <UserCircle size={16} />
+            Manage Users
+          </Link>
+          <Link
+            href="/dashboard/account"
+            className="flex items-center gap-2 px-5 py-2.5 bg-white border border-slate-200 text-[#0F172A] text-sm font-medium rounded-xl hover:border-[#F59E0B] transition-colors"
+          >
+            <Settings size={16} />
+            My Account
           </Link>
           <Link
             href="/properties"

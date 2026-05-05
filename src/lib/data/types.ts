@@ -43,6 +43,7 @@ export interface Property {
   description: string
   pricePerNight?: number
   available: boolean
+  images?: string[]
   createdAt: string
   updatedAt: string
 }

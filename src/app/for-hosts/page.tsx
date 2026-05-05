@@ -1,6 +1,6 @@
 import Navbar from "@/components/Navbar"
 import Footer from "@/components/Footer"
-import Link from "next/link"
+import HostRegistrationForm from "@/components/HostRegistrationForm"
 import {
   PoundSterling,
   Shield,
@@ -109,12 +109,12 @@ export default function ForHostsPage() {
                 Partner with Homes For Workers and let your property to vetted, employed contractors and engineers. Longer stays, better rates, fully managed.
               </p>
               <div className="flex flex-wrap gap-4">
-                <Link
-                  href="/contact"
+                <a
+                  href="#register"
                   className="px-7 py-3.5 bg-[#F59E0B] hover:bg-[#D97706] text-white font-semibold rounded-xl text-sm transition-colors flex items-center gap-2"
                 >
                   Register Your Property <ArrowRight size={16} />
-                </Link>
+                </a>
                 <a
                   href="tel:+442034882119"
                   className="px-7 py-3.5 border-2 border-white/30 hover:border-white text-white font-semibold rounded-xl text-sm transition-colors"
@@ -248,29 +248,18 @@ export default function ForHostsPage() {
           </div>
         </section>
 
-        {/* CTA */}
-        <section className="py-16 amber-gradient">
-          <div className="max-w-3xl mx-auto px-4 text-center">
-            <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">
-              Ready to list your property?
-            </h2>
-            <p className="text-amber-100 mb-8">
-              Get in touch today and we'll tell you exactly what your property could earn and how quickly we can fill it.
-            </p>
-            <div className="flex flex-wrap justify-center gap-4">
-              <Link
-                href="/contact"
-                className="px-7 py-3.5 bg-white text-[#D97706] font-semibold rounded-xl text-sm hover:bg-amber-50 transition-colors"
-              >
+        {/* Registration Form */}
+        <section id="register" className="py-20 bg-slate-50">
+          <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-10">
+              <h2 className="text-3xl sm:text-4xl font-bold text-[#0F172A] mb-3">
                 Register Your Property
-              </Link>
-              <a
-                href="tel:+442034882119"
-                className="px-7 py-3.5 bg-transparent border-2 border-white text-white font-semibold rounded-xl text-sm hover:bg-white/10 transition-colors"
-              >
-                Call Us Now
-              </a>
+              </h2>
+              <p className="text-slate-500 max-w-xl mx-auto">
+                Fill in your details below and we&rsquo;ll review your property within 48 hours. No obligation — we&rsquo;ll simply let you know if it&rsquo;s a good fit and what it could earn.
+              </p>
             </div>
+            <HostRegistrationForm />
           </div>
         </section>
       </main>

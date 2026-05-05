@@ -1,9 +1,10 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
+import Image from "next/image"
 import Navbar from "@/components/Navbar"
 import Footer from "@/components/Footer"
-import { MapPin, Bed, Bath, Users, Wifi, Car, Building2, Home, ChevronDown } from "lucide-react"
+import { MapPin, Bed, Bath, Users, Wifi, Car, Building2, Home, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react"
 
 type Property = {
   id: string
@@ -20,6 +21,136 @@ type Property = {
   description: string
   pricePerNight: number | null
   available: boolean
+  images?: string[]
+}
+
+type CarouselProps = {
+  images?: string[]
+  title: string
+  type: string
+  status: string
+  pricePerNight: number | null
+}
+
+function PropertyImageCarousel({ images, title, type, status, pricePerNight }: CarouselProps) {
+  const [current, setCurrent] = useState(0)
+  const touchStartX = useRef<number | null>(null)
+  const touchStartY = useRef<number | null>(null)
+
+  const hasImages = images && images.length > 0
+
+  const prev = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    if (!hasImages) return
+    setCurrent((c) => (c - 1 + images.length) % images.length)
+  }
+  const next = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    if (!hasImages) return
+    setCurrent((c) => (c + 1) % images.length)
+  }
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX
+    touchStartY.current = e.touches[0].clientY
+  }
+  const onTouchEnd = (e: React.TouchEvent) => {
+    if (!hasImages || touchStartX.current === null || touchStartY.current === null) return
+    const dx = e.changedTouches[0].clientX - touchStartX.current
+    const dy = e.changedTouches[0].clientY - touchStartY.current
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 40) {
+      e.preventDefault()
+      if (dx < 0) setCurrent((c) => (c + 1) % images.length)
+      else setCurrent((c) => (c - 1 + images.length) % images.length)
+    }
+    touchStartX.current = null
+    touchStartY.current = null
+  }
+
+  return (
+    <div
+      className="relative h-56 bg-slate-100 overflow-hidden select-none"
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
+    >
+      {hasImages ? (
+        <Image
+          src={images[current]}
+          alt={`${title} — photo ${current + 1}`}
+          fill
+          className="object-cover transition-opacity duration-300"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          unoptimized
+        />
+      ) : (
+        <div className="h-full hero-gradient flex items-center justify-center">
+          <Home size={48} className="text-white/20" />
+        </div>
+      )}
+
+      {/* Gradient scrim — ensures badges/arrows always read */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/20 pointer-events-none" />
+
+      {/* Type + status badges — top left */}
+      <div className="absolute top-3 left-3 flex items-center gap-1.5">
+        <span className={`text-xs font-semibold px-2.5 py-1 rounded-full shadow ${
+          type === "House" ? "bg-blue-500 text-white" : "bg-purple-500 text-white"
+        }`}>
+          {type === "House" ? <Home size={11} className="inline mr-1" /> : <Building2 size={11} className="inline mr-1" />}
+          {type}
+        </span>
+        <span className={`text-xs font-semibold px-2.5 py-1 rounded-full shadow ${
+          status === "active" ? "bg-green-500 text-white"
+          : status === "pending" ? "bg-yellow-500 text-white"
+          : "bg-slate-400 text-white"
+        }`}>
+          {status}
+        </span>
+      </div>
+
+      {/* Price — bottom right, above dots */}
+      {pricePerNight && (
+        <div className="absolute bottom-8 right-3 bg-black/60 backdrop-blur-sm rounded-xl px-3 py-1 text-right">
+          <span className="text-[#F59E0B] font-bold text-lg leading-none">£{pricePerNight}</span>
+          <span className="text-white/70 text-xs"> /night</span>
+        </div>
+      )}
+
+      {hasImages && images.length > 1 && (
+        <>
+          {/* Arrow buttons — always visible, solid white circle */}
+          <button
+            onClick={prev}
+            className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white active:scale-95 text-slate-800 rounded-full w-9 h-9 flex items-center justify-center shadow-lg transition-transform z-10"
+            aria-label="Previous photo"
+          >
+            <ChevronLeft size={20} />
+          </button>
+          <button
+            onClick={next}
+            className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white active:scale-95 text-slate-800 rounded-full w-9 h-9 flex items-center justify-center shadow-lg transition-transform z-10"
+            aria-label="Next photo"
+          >
+            <ChevronRight size={20} />
+          </button>
+
+          {/* Pill dots — active one stretches wider */}
+          <div className="absolute bottom-2.5 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
+            {images.map((_, i) => (
+              <button
+                key={i}
+                onClick={(e) => { e.stopPropagation(); setCurrent(i) }}
+                className={`rounded-full transition-all duration-200 ${
+                  i === current ? "bg-white w-5 h-2" : "bg-white/55 hover:bg-white/80 w-2 h-2"
+                }`}
+                aria-label={`Photo ${i + 1}`}
+              />
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  )
 }
 
 const amenityIcons: Record<string, React.ReactNode> = {
@@ -163,36 +294,14 @@ export default function PropertiesPage() {
                       key={property.id}
                       className="bg-white rounded-2xl border border-slate-100 overflow-hidden hover:shadow-lg hover:border-[#F59E0B]/30 transition-all group"
                     >
-                      {/* Card header */}
-                      <div className="h-44 hero-gradient relative flex items-end p-5">
-                        <div className="flex items-center gap-2">
-                          <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${
-                            property.type === "House"
-                              ? "bg-blue-500 text-white"
-                              : "bg-purple-500 text-white"
-                          }`}>
-                            {property.type === "House" ? <Home size={11} className="inline mr-1" /> : <Building2 size={11} className="inline mr-1" />}
-                            {property.type}
-                          </span>
-                          <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${
-                            property.status === "active"
-                              ? "bg-green-500 text-white"
-                              : property.status === "pending"
-                              ? "bg-yellow-500 text-white"
-                              : "bg-slate-400 text-white"
-                          }`}>
-                            {property.status}
-                          </span>
-                        </div>
-                        {property.pricePerNight && (
-                          <div className="ml-auto text-right">
-                            <span className="text-[#F59E0B] font-bold text-xl">
-                              £{property.pricePerNight}
-                            </span>
-                            <span className="text-white/70 text-xs">/night</span>
-                          </div>
-                        )}
-                      </div>
+                      {/* Property photo carousel */}
+                      <PropertyImageCarousel
+                        images={property.images}
+                        title={property.title}
+                        type={property.type}
+                        status={property.status}
+                        pricePerNight={property.pricePerNight}
+                      />
 
                       {/* Card body */}
                       <div className="p-6">

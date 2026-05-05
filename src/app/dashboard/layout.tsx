@@ -9,6 +9,7 @@ import {
   Settings,
   LogOut,
   ChevronRight,
+  UserCircle,
 } from "lucide-react"
 
 const navItems = [
@@ -16,6 +17,8 @@ const navItems = [
   { href: "/dashboard/leads", label: "Leads", icon: Users },
   { href: "/dashboard/properties", label: "Properties", icon: Building2 },
   { href: "/dashboard/bookings", label: "Bookings", icon: CalendarCheck },
+  { href: "/dashboard/users", label: "Users", icon: UserCircle },
+  { href: "/dashboard/account", label: "Account", icon: Settings },
   { href: "/dashboard/settings", label: "Settings", icon: Settings },
 ]
 
